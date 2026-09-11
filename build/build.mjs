@@ -10,6 +10,11 @@ const SRC  = path.join(ROOT, 'src');
 const OUT  = path.join(ROOT, 'dist');
 
 const PREVIEW = process.env.PREVIEW === '1';
+// Serving from a GitHub Pages project URL (…github.io/take2cleaning/) rather than
+// the custom domain? Set BASE_PATH=/take2cleaning and every internal link is
+// rewritten to sit under it. Leave it empty for the live domain.
+const BASE = (process.env.BASE_PATH || '').replace(/\/$/, '');
+const SUBPATH = BASE !== '';
 const pages = [];   // { url, title, priority, changefreq }
 
 /* ------------------------------------------------------------- helpers */
@@ -19,11 +24,15 @@ const wa  = (msg = "Hello, I'd like a cleaning quote please.") => `https://wa.me
 const svc = slug => services.find(s => s.slug === slug);
 const quoteHref = s => '/contact/' + (s ? `?service=${s}` : '');
 
+const rebase = html => SUBPATH
+  ? html.replace(/(href|src|content)="\/(?!\/)/g, `$1="${BASE}/`)
+  : html;
+
 const write = (url, html) => {
   const rel = url === '/404.html' ? '404.html' : path.join(url.replace(/^\//, ''), 'index.html');
   const file = path.join(OUT, rel);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, html);
+  fs.writeFileSync(file, rebase(html));
 };
 
 /* --------------------------------------------------------------- chrome */
@@ -154,7 +163,7 @@ function page({ url, title, desc, cur = '', crumbs = [], body, schema = [], prio
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${canonical}">
-${PREVIEW ? '<meta name="robots" content="noindex, nofollow">' : ''}
+${(PREVIEW || SUBPATH) ? '<meta name="robots" content="noindex, nofollow">' : ''}
 <meta property="og:site_name" content="${site.name}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
@@ -866,9 +875,9 @@ const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
 fs.writeFileSync(path.join(OUT, 'favicon.svg'), favicon);
 
 fs.writeFileSync(path.join(OUT, 'robots.txt'),
-  PREVIEW ? `User-agent: *\nDisallow:\n` : `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`);
+  (PREVIEW || SUBPATH) ? `User-agent: *\nDisallow:\n` : `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`);
 
-if (!PREVIEW) {
+if (!PREVIEW && !SUBPATH) {
   fs.writeFileSync(path.join(OUT, 'CNAME'), site.domain + '\n');
   const today = new Date().toISOString().slice(0, 10);
   fs.writeFileSync(path.join(OUT, 'sitemap.xml'),
@@ -879,4 +888,4 @@ ${pages.map(p => `  <url><loc>${site.origin}${p.url}</loc><lastmod>${today}</las
 `);
 }
 
-console.log(`Built ${pages.length} pages into dist/${PREVIEW ? '  (PREVIEW: noindex)' : ''}`);
+console.log(`Built ${pages.length} pages into dist/${PREVIEW ? '  (PREVIEW: noindex)' : ''}${SUBPATH ? `  (served under ${BASE}, noindex, no CNAME)` : ''}`);
