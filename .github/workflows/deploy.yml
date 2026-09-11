@@ -26,6 +26,10 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          # Set the repository variable BASE_PATH to /take2cleaning while the site
+          # is served from the github.io project URL. Delete it to go live on the
+          # custom domain, which also switches the CNAME and sitemap back on.
+          BASE_PATH: ${{ vars.BASE_PATH }}
         run: node build/build.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
