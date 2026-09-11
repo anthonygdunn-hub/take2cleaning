@@ -64,8 +64,16 @@ const header = (cur = '') => `
       <a href="/about/"${cur === 'about' ? ' aria-current="page"' : ''}>About</a>
       <a href="/contact/"${cur === 'contact' ? ' aria-current="page"' : ''}>Contact</a>
     </nav>
-    <a class="btn btn-primary btn-sm head-cta" href="${quoteHref()}">${icons.quote} Get a free quote</a>
-    <button class="burger" id="burger" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">${icons.burger} Menu</button>
+    <div class="head-actions">
+      <a class="btn btn-primary btn-sm head-cta" href="${quoteHref()}">${icons.quote} Get a free quote</a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" title="Switch between the light and dark versions of this site">
+        <span class="sw" aria-hidden="true"></span>
+        <span class="lbl lbl-light">Light</span>
+        <span class="lbl lbl-dark">Dark</span>
+        <span class="sr">Switch theme</span>
+      </button>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">${icons.burger} Menu</button>
+    </div>
   </div>
 </header>
 <div class="drawer" id="drawer">
@@ -117,7 +125,7 @@ const footer = () => `
           <li><a href="${tel}">${site.phone}</a></li>
           <li><a href="${wa()}" rel="noopener">WhatsApp ${site.whatsapp}</a></li>
           <li><a href="mailto:${site.email}">${site.email}</a></li>
-          <li class="muted" style="color:#c9e4f7">${site.hours}</li>
+          <li class="foot-hours">${site.hours}</li>
         </ul>
         <h2 style="margin-top:26px">More</h2>
         <ul>
@@ -176,6 +184,7 @@ ${(PREVIEW || SUBPATH) ? '<meta name="robots" content="noindex, nofollow">' : ''
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>(function(){try{var t=localStorage.getItem("t2c-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 ${schema.map(s => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join('\n')}
 </head>
@@ -259,7 +268,7 @@ const ctaBand = (heading = 'Tell us what needs doing', sub = 'Free quote, itemis
   <div class="cta-strip">
     <div style="max-width:44ch">
       <h2 class="mb0">${heading}</h2>
-      <p style="margin-top:.6em;color:#b9dfeb">${sub}</p>
+      <p class="band-sub">${sub}</p>
     </div>
     <div class="btn-row">
       <a class="btn btn-primary" href="${quoteHref()}">${icons.quote} Get a free quote</a>
@@ -334,8 +343,8 @@ write('/', page({
 
 <section class="band-ink"><div class="wrap">
   <div class="sec-head" style="max-width:52ch"><h2>Based in Bordon, and it matters</h2>
-  <p style="color:#b9dfeb">Almost everything we do is within twenty minutes of the yard. That is why we can move a visit at short notice, why we can take a next-day end of tenancy in Whitehill, and why the same cleaner covers the same round week after week.</p></div>
-  <div class="arealist" style="margin-bottom:28px">${areas.slice(0, 9).map(a => `<a href="/areas/${a.slug}/" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)"><b style="color:#fff">${a.name}</b><span style="color:#c9e4f7">${a.postcode}</span></a>`).join('')}</div>
+  <p class="band-sub">Almost everything we do is within twenty minutes of the yard. That is why we can move a visit at short notice, why we can take a next-day end of tenancy in Whitehill, and why the same cleaner covers the same round week after week.</p></div>
+  <div class="arealist" style="margin-bottom:28px">${areas.slice(0, 9).map(a => `<a class="on-feat" href="/areas/${a.slug}/"><b>${a.name}</b><span>${a.postcode}</span></a>`).join('')}</div>
   <a class="btn btn-onink" href="/areas/">All ${areas.length} areas we cover ${icons.arrow}</a>
 </div></section>
 
@@ -690,7 +699,7 @@ write('/about/', page({
 
 <section class="band-ink"><div class="wrap">
   <div class="sec-head" style="max-width:50ch"><h2>The promise, in one line</h2>
-  <p style="color:#b9dfeb">If you are not happy with a clean, tell us within 48 hours and we come back and put it right at no charge. That is the whole policy. There is nothing else in the small print.</p></div>
+  <p class="band-sub">If you are not happy with a clean, tell us within 48 hours and we come back and put it right at no charge. That is the whole policy. There is nothing else in the small print.</p></div>
 </div></section>
 
 ${ctaBand()}`
