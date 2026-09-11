@@ -14,7 +14,19 @@ Settings, Secrets and variables, Actions, New repository secret:
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 
-## 3. GitHub Pages
+## 3. Where the site is served from
+
+While the domain is not pointed at GitHub, the site runs at
+`https://anthonygdunn-hub.github.io/take2cleaning/`. That works because the
+repository variable `BASE_PATH` is set to `/take2cleaning`, which makes the build
+rewrite every internal link under that prefix, mark every page noindex, and skip
+the CNAME and the sitemap.
+
+**To go live on the real domain, delete the `BASE_PATH` repository variable**
+(Settings, Secrets and variables, Actions, Variables) and push. The build then
+writes the CNAME and the sitemap and drops the noindex.
+
+## 4. GitHub Pages
 
 Settings, Pages, Source: **GitHub Actions**. The workflow in
 `.github/workflows/deploy.yml` builds the site and publishes `dist/` on every
@@ -23,7 +35,7 @@ push to `main`.
 Custom domain: `www.take2cleaning.co.uk`. The build writes the CNAME file itself,
 so do not add one by hand.
 
-## 4. DNS
+## 5. DNS
 
 At whoever holds the domain:
 
@@ -42,7 +54,7 @@ Then wait for GitHub to issue the certificate, and only then tick **Enforce HTTP
 Until it is issued, the desktop will show `ERR_CERT_COMMON_NAME_INVALID` while a
 phone on mobile data may look fine.
 
-## 5. Enquiry notifications
+## 6. Enquiry notifications
 
 Same pattern as tcooperinteriors: an edge function `notify-enquiry`, fired by a
 database webhook on insert to `take2_enquiries`, sending through Resend.
