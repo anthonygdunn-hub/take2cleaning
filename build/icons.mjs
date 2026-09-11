@@ -25,19 +25,3 @@ export const icons = {
   star:    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>',
   print:   s('<path d="M7 8V3h10v5"/><rect x="3.5" y="8" width="17" height="8" rx="2"/><path d="M7 14h10v7H7z"/>')
 };
-
-export const sparkle = (size = 24, o = 1) =>
-  `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:${size}px;height:${size}px;opacity:${o}"><path d="M12 0c.6 5.6 2.2 8.4 6.6 9.5C14.2 10.6 12.6 13.4 12 19c-.6-5.6-2.2-8.4-6.6-9.5C9.8 8.4 11.4 5.6 12 0Z" transform="translate(0 2.5)"/></svg>`;
-
-// The logo mark, redrawn as vector so it scales and needs no image file.
-export const logoMark = `
-<svg viewBox="0 0 48 48" role="img" aria-label="Take2Cleaning" class="brand-mark">
-  <defs><linearGradient id="t2g" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#5ad9f0"/><stop offset="1" stop-color="#0a7c99"/>
-  </linearGradient></defs>
-  <rect width="48" height="48" rx="13" fill="url(#t2g)"/>
-  <path d="M24 9.5c.75 7 2.75 10.5 8.25 11.9C26.75 22.8 24.75 26.3 24 33.3c-.75-7-2.75-10.5-8.25-11.9C21.25 20 23.25 16.5 24 9.5Z" fill="#fff"/>
-  <path d="M34.5 28c.4 3.7 1.45 5.55 4.35 6.3-2.9.74-3.95 2.6-4.35 6.3-.4-3.7-1.45-5.56-4.35-6.3 2.9-.75 3.95-2.6 4.35-6.3Z" fill="#fff" opacity=".85"/>
-  <circle cx="13" cy="33" r="3" fill="#fff" opacity=".7"/>
-  <circle cx="19" cy="39.5" r="1.8" fill="#fff" opacity=".5"/>
-</svg>`;

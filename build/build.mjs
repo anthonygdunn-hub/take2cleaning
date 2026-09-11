@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { site, services, areas, guides, reasons, steps, faqs, quoteFacts, priceFactors } from './data.mjs';
-import { icons, logoMark, sparkle } from './icons.mjs';
+import { icons } from './icons.mjs';
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dir, '..');
@@ -41,16 +41,16 @@ const navAreas = areas.slice(0, 8).map(a => `<a href="/areas/${a.slug}/">${a.nam
 
 const header = (cur = '') => `
 <div class="topbar"><div class="wrap">
-  <span>${icons.pin}<span class="dim">Based in ${site.town}, ${site.county}</span></span>
+  <span class="has-dim">${icons.pin}Based in ${site.town}, ${site.county}</span>
   <span>${icons.phone}<a href="${tel}">${site.phone}</a></span>
   <span>${icons.whatsapp}<a href="${wa()}" rel="noopener">WhatsApp ${site.whatsapp}</a></span>
-  <span class="dim">${icons.clock}${site.hours}</span>
+  <span class="has-dim">${icons.clock}${site.hours}</span>
 </div></div>
 <header class="head">
   <div class="wrap head-in">
     <a class="brand" href="/" aria-label="${site.name} home">
-      ${logoMark}
-      <span class="brand-txt">Take<em>2</em>Cleaning<span class="brand-sub">Bordon &middot; East Hampshire</span></span>
+      <img src="/assets/img/logo-lockup.png" alt="${site.name}" width="520" height="217" fetchpriority="high">
+      <span class="brand-sub">Bordon<br>East Hampshire</span>
     </a>
     <nav class="nav" aria-label="Main">
       <div class="has-menu"><a href="/services/"${cur === 'services' ? ' aria-current="page"' : ''}>Services</a>
@@ -71,7 +71,7 @@ const header = (cur = '') => `
 <div class="drawer" id="drawer">
   <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
     <div class="drawer-head">
-      <span class="brand-txt">Take<em>2</em>Cleaning</span>
+      <img src="/assets/img/logo-lockup.png" alt="${site.name}">
       <button class="drawer-close" data-close aria-label="Close menu">&times;</button>
     </div>
     <nav aria-label="Mobile">
@@ -99,7 +99,7 @@ const footer = () => `
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <a class="brand" href="/" style="margin-bottom:16px">${logoMark}<span class="brand-txt" style="color:#fff">Take<em style="color:var(--brand-2)">2</em>Cleaning</span></a>
+        <a class="brand" href="/" aria-label="${site.name} home"><img src="/assets/img/logo.png" alt="${site.name}" width="420" height="286" loading="lazy"></a>
         <p>Domestic and commercial cleaning from ${site.town}, covering East Hampshire and the Surrey border. DBS-checked staff, written specifications and a free itemised quote.</p>
         <p style="margin-top:16px"><a class="btn btn-onink btn-sm" href="${quoteHref()}">Get a free quote</a></p>
       </div>
@@ -117,7 +117,7 @@ const footer = () => `
           <li><a href="${tel}">${site.phone}</a></li>
           <li><a href="${wa()}" rel="noopener">WhatsApp ${site.whatsapp}</a></li>
           <li><a href="mailto:${site.email}">${site.email}</a></li>
-          <li class="muted" style="color:#7fb4c6">${site.hours}</li>
+          <li class="muted" style="color:#8fc3e2">${site.hours}</li>
         </ul>
         <h2 style="margin-top:26px">More</h2>
         <ul>
@@ -172,7 +172,7 @@ ${(PREVIEW || SUBPATH) ? '<meta name="robots" content="noindex, nofollow">' : ''
 <meta property="og:locale" content="en_GB">
 <meta name="theme-color" content="#072530">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -202,7 +202,8 @@ const localBusiness = {
   url: site.origin + '/',
   telephone: '+44 ' + site.phoneHref.slice(2),
   email: site.email,
-  image: site.origin + '/icon-512.png',
+  image: site.origin + '/assets/img/logo.png',
+  logo: site.origin + '/assets/img/logo.png',
   description: 'Domestic and commercial cleaning company based in Bordon, Hampshire, covering East Hampshire and the Surrey border.',
   address: { '@type': 'PostalAddress', addressLocality: site.town, addressRegion: site.county, postalCode: site.postcodeArea, addressCountry: 'GB' },
   geo: { '@type': 'GeoCoordinates', latitude: site.lat, longitude: site.lng },
@@ -867,11 +868,10 @@ pages.pop();
 fs.cpSync(path.join(SRC, 'assets'), path.join(OUT, 'assets'), { recursive: true });
 
 const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ad9f0"/><stop offset="1" stop-color="#0a7c99"/></linearGradient></defs>
-<rect width="48" height="48" rx="13" fill="url(#g)"/>
-<path d="M24 9.5c.75 7 2.75 10.5 8.25 11.9C26.75 22.8 24.75 26.3 24 33.3c-.75-7-2.75-10.5-8.25-11.9C21.25 20 23.25 16.5 24 9.5Z" fill="#fff"/>
-<path d="M34.5 28c.4 3.7 1.45 5.55 4.35 6.3-2.9.74-3.95 2.6-4.35 6.3-.4-3.7-1.45-5.56-4.35-6.3 2.9-.75 3.95-2.6 4.35-6.3Z" fill="#fff" opacity=".85"/>
-<circle cx="13" cy="33" r="3" fill="#fff" opacity=".7"/></svg>`;
+<defs><linearGradient id="g" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#4fc3f7"/><stop offset="1" stop-color="#0a6291"/></linearGradient></defs>
+<rect width="48" height="48" rx="11" fill="url(#g)"/>
+<path d="M21 4c1 9.6 3.7 14.4 11.5 16.3C24.7 22.2 22 27 21 36.6c-1-9.6-3.7-14.4-11.5-16.3C17.3 18.4 20 13.6 21 4Z" fill="#fff"/>
+<path d="M35.5 26c.5 4.6 1.8 6.9 5.5 7.8-3.7.9-5 3.2-5.5 7.8-.5-4.6-1.8-6.9-5.5-7.8 3.7-.9 5-3.2 5.5-7.8Z" fill="#fff" opacity=".9"/></svg>`;
 fs.writeFileSync(path.join(OUT, 'favicon.svg'), favicon);
 
 fs.writeFileSync(path.join(OUT, 'robots.txt'),
