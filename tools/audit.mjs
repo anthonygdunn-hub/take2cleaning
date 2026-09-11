@@ -42,7 +42,13 @@ const allLinks = new Set();
 const problems = [];
 for (const u of urls) {
   await send('Page.navigate', { url: base + u });
-  await new Promise(r => setTimeout(r, 420));
+  // wait for the document to actually finish rather than guessing at a delay
+  for (let i = 0; i < 40; i++) {
+    await new Promise(r => setTimeout(r, 60));
+    const rs = await send('Runtime.evaluate', { expression: "document.readyState + '|' + (document.querySelectorAll('h1,main').length)", returnByValue: true });
+    const v = rs.result && rs.result.value;
+    if (typeof v === 'string' && v.startsWith('complete') && v.split('|')[1] !== '0') break;
+  }
   const r = await send('Runtime.evaluate', { expression: probe, returnByValue: true });
   const d = JSON.parse(r.result.value);
   d.links.forEach(l => allLinks.add(l));

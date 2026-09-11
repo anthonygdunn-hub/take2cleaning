@@ -29,9 +29,13 @@ const expr = `(() => {
   return JSON.stringify(out.filter(o => { const k = o.cls + o.tag + o.ratio; if (seen.has(k)) return false; seen.add(k); return true; }));
 })()`;
 const urls = ['/', '/services/end-of-tenancy-cleaning/', '/areas/bordon/', '/contact/', '/how-we-quote/', '/guides/', '/reviews/', '/about/', '/faqs/'];
+const theme = process.argv[2] || 'light';
+console.log('=== ' + theme.toUpperCase() + ' THEME ===');
 for (const u of urls) {
   await send('Page.navigate', { url: 'http://127.0.0.1:8099' + u });
-  await new Promise(r => setTimeout(r, 1400));
+  await new Promise(r => setTimeout(r, 1200));
+  await send('Runtime.evaluate', { expression: `document.documentElement.setAttribute('data-theme', ${JSON.stringify(theme)})` });
+  await new Promise(r => setTimeout(r, 300));
   const r = await send('Runtime.evaluate', { expression: expr, returnByValue: true });
   if (r.exceptionDetails) { console.log(u + ': EXCEPTION ' + JSON.stringify(r.exceptionDetails).slice(0, 400)); continue; }
   const bad = JSON.parse(r.result.value);
