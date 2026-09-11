@@ -2,6 +2,41 @@
 (function () {
   'use strict';
 
+  /* ---- light and dark themes ----
+     The inline script in <head> has already applied the saved choice, so all
+     this has to do is flip it and keep the button label and the browser chrome
+     colour in step. */
+  var root = document.documentElement;
+  var themeMeta = document.querySelector('meta[name=theme-color]');
+  var THEME_BAR = { light: '#dcf1fc', dark: '#041a2c' };
+
+  var paintTheme = function (mode) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'), function (b) {
+      b.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
+      b.title = mode === 'dark'
+        ? 'Switch to the light version of this site'
+        : 'Switch to the dark version of this site';
+    });
+    if (themeMeta) themeMeta.setAttribute('content', THEME_BAR[mode] || THEME_BAR.light);
+  };
+
+  paintTheme(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      // Without this, Chrome keeps painting the old body background until
+      // something else forces a repaint.
+      root.classList.add('theme-switching');
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('t2c-theme', next); } catch (e) {}
+      paintTheme(next);
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { root.classList.remove('theme-switching'); });
+      });
+    });
+  });
+
   /* ---- mobile drawer ---- */
   var drawer = document.getElementById('drawer');
   var burger = document.getElementById('burger');
