@@ -117,7 +117,7 @@ const footer = () => `
           <li><a href="${tel}">${site.phone}</a></li>
           <li><a href="${wa()}" rel="noopener">WhatsApp ${site.whatsapp}</a></li>
           <li><a href="mailto:${site.email}">${site.email}</a></li>
-          <li class="muted" style="color:#8fc3e2">${site.hours}</li>
+          <li class="muted" style="color:#c9e4f7">${site.hours}</li>
         </ul>
         <h2 style="margin-top:26px">More</h2>
         <ul>
@@ -170,7 +170,7 @@ ${(PREVIEW || SUBPATH) ? '<meta name="robots" content="noindex, nofollow">' : ''
 <meta property="og:url" content="${canonical}">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_GB">
-<meta name="theme-color" content="#072530">
+<meta name="theme-color" content="#0a4470">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -335,7 +335,7 @@ write('/', page({
 <section class="band-ink"><div class="wrap">
   <div class="sec-head" style="max-width:52ch"><h2>Based in Bordon, and it matters</h2>
   <p style="color:#b9dfeb">Almost everything we do is within twenty minutes of the yard. That is why we can move a visit at short notice, why we can take a next-day end of tenancy in Whitehill, and why the same cleaner covers the same round week after week.</p></div>
-  <div class="arealist" style="margin-bottom:28px">${areas.slice(0, 9).map(a => `<a href="/areas/${a.slug}/" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)"><b style="color:#fff">${a.name}</b><span style="color:#8fc4d6">${a.postcode}</span></a>`).join('')}</div>
+  <div class="arealist" style="margin-bottom:28px">${areas.slice(0, 9).map(a => `<a href="/areas/${a.slug}/" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)"><b style="color:#fff">${a.name}</b><span style="color:#c9e4f7">${a.postcode}</span></a>`).join('')}</div>
   <a class="btn btn-onink" href="/areas/">All ${areas.length} areas we cover ${icons.arrow}</a>
 </div></section>
 
