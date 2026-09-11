@@ -1,0 +1,11 @@
+{
+  "name": "take2cleaning",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build/build.mjs",
+    "preview": "PREVIEW=1 node build/build.mjs && node tools/bundle.mjs",
+    "bundle": "node tools/bundle.mjs",
+    "serve": "node build/build.mjs && npx --yes http-server dist -p 8099"
+  }
+}
