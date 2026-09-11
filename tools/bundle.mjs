@@ -23,6 +23,23 @@ walk(DIST);
 const css = fs.readFileSync(path.join(DIST, 'assets/css/styles.css'), 'utf8');
 const js  = fs.readFileSync(path.join(DIST, 'assets/js/site.js'), 'utf8');
 const favicon = fs.readFileSync(path.join(DIST, 'favicon.svg'), 'utf8');
+
+// Inline every image as a data URI so the single file works from disk.
+const images = {};
+const walkImg = d => fs.readdirSync(d, { withFileTypes: true }).forEach(e => {
+  const f = path.join(d, e.name);
+  if (e.isDirectory()) return walkImg(f);
+  const ext = path.extname(e.name).slice(1).toLowerCase();
+  if (!['png', 'jpg', 'jpeg', 'svg', 'webp', 'gif'].includes(ext)) return;
+  const type = ext === 'svg' ? 'image/svg+xml' : ext === 'jpg' ? 'image/jpeg' : 'image/' + ext;
+  const url = '/' + path.relative(DIST, f).replace(/\\/g, '/');
+  images[url] = `data:${type};base64,${fs.readFileSync(f).toString('base64')}`;
+});
+walkImg(path.join(DIST, 'assets'));
+// Images are referenced by key and resolved once at render time, so a
+// 38-page bundle carries one copy of each file rather than 38.
+const inlineImages = html => html.replace(/src="(\/assets\/[^"]+\.(?:png|jpe?g|svg|webp|gif))"/g,
+  (m, url) => images[url] ? `data-img="${url}"` : m);
 const faviconData = 'data:image/svg+xml;base64,' + Buffer.from(favicon).toString('base64');
 
 const grab = (html, tag) => {
@@ -34,9 +51,9 @@ const docs = {};
 for (const [url, html] of Object.entries(pages)) {
   docs[url] = {
     title: (html.match(/<title>([\s\S]*?)<\/title>/i) || [, ''])[1],
-    body: grab(html, 'body')
+    body: inlineImages(grab(html, 'body')
       .replace(/<script[\s\S]*?<\/script>/gi, '')
-      .replace(/<a class="skip"[\s\S]*?<\/a>/i, '')
+      .replace(/<a class="skip"[\s\S]*?<\/a>/i, ''))
   };
 }
 
@@ -61,6 +78,7 @@ const shell = `<!doctype html>
 <div id="app"></div>
 <script>
 window.T2C_CONFIG = { email: 'hello@take2cleaning.co.uk', phone: '07354 321405' };
+var IMG = ${JSON.stringify(images)};
 var DOCS = ${JSON.stringify(docs)};
 var app = document.getElementById('app');
 function norm(h){
@@ -73,6 +91,10 @@ function norm(h){
 function render(url){
   var d = DOCS[url] || DOCS['/'];
   app.innerHTML = d.body;
+  Array.prototype.forEach.call(app.querySelectorAll('[data-img]'), function(el){
+    var u = IMG[el.getAttribute('data-img')];
+    if (u) el.src = u;
+  });
   document.title = d.title;
   window.scrollTo(0,0);
   boot();
